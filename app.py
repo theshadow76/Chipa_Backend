@@ -5,6 +5,8 @@ from fastapi.responses import HTMLResponse
 
 from content import Html
 
+from backend import Profile
+
 app = FastAPI() # TODO: Ver si asi se hacia
 app.title = "Chipa API"
 
@@ -19,12 +21,16 @@ def root():
 @app.get('/porfile', tags=['Profile'], summary="Get the profile of the user")
 def GetProfile(id):
     """GET profile data, Example usage: https://chipa.api.vigodev.net/profile?id={UID}"""
-    return "GetProfile"
+    prfl = Profile()
+    data = prfl.GetProfile(id=id)
+    return {"Message" : data}
 
 @app.post('/profile/add', tags=['Profile'], summary="Create profile")
 def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body()):
     """Create a profile"""
-    return "Profile Created"
+    prfl = Profile()
+    data = prfl.GetProfile(id=1)
+    return {"Message" : data}
 
 @app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
 def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), password: str = Body()):
