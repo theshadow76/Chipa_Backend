@@ -1,11 +1,14 @@
 # Made by © Vigo Walker
 
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 
-app = FastAPI(__name__) # TODO: Ver si asi se hacia
+from content import Html
+
+app = FastAPI() # TODO: Ver si asi se hacia
 
 @app.get('/', tags=['Home'])
 def root():
     """Root call"""
-    return "Home Call"
+    return HTMLResponse(content=Html.ROOT_HTML, status_code=200)
 
