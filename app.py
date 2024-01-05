@@ -19,10 +19,10 @@ def root():
 # -------------------------------------------- profile -------------------------------------------- #
 
 @app.get('/porfile', tags=['Profile'], summary="Get the profile of the user")
-def GetProfile(id):
+def GetProfile(uid):
     """GET profile data, Example usage: https://chipa.api.vigodev.net/profile?id={UID}"""
     prfl = Profile()
-    data = prfl.GetProfile(id=id)
+    data = prfl.GetProfile(id=uid)
     return {"Message" : data}
 
 @app.post('/profile/add', tags=['Profile'], summary="Create profile")
