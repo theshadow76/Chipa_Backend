@@ -79,6 +79,31 @@ def GetAllCryptos():
     """Get all the crypto"""
     return "GetAllCryptos"
 
+@app.get('/trading/GetBalance', tags=['Trading'], summary="Get the balance")
+def GetBalance(uid):
+    """Get the balance"""
+    return "GetBalance"
+
+@app.get('/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
+def GetCryptoPrice(id):
+    """Get the crypto price"""
+    return "GetCryptoPrice"
+
+@app.get('/trading/GetProfitByID', tags=['Trading'], summary="Get the profit of a specific trade")
+def GetProfitByID(id):
+    """Get the proift of a specific trade"""
+    return "GetProfitByID"
+
+@app.get('/trading/GetAllProfit', tags=['Trading'], summary="Get all the profit")
+def GetAllProfit():
+    """Get all the profit"""
+    return "GetAllProfit"
+
+@app.get('/trading/GetTradeHistory', tags=['Trading'], summary="Get the trade history")
+def GetTradeHistory():
+    """Get the trade history"""
+    return "GetTradeHistory"
+
 
 # -------------------------------------------- Admin -------------------------------------------- #
 @app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
