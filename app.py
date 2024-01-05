@@ -62,4 +62,15 @@ def GetCryptoByID(id):
     """Get Crypto By it's ID"""
     return "GetCryptoByID"
 
+@app.get('/trading/GetAllCryptosIDs', tags=['Trading'], summary="Get all the cryptos id's")
+def GetAllCryptosIDs():
+    """Get all the cryptos id's"""
+    return "GetAllCryptosIDs"
+
+@app.get('/trading/GetAllCryptos', tags=['Trading'], summary="Get all the crypto")
+def GetAllCryptos():
+    """Get all the crypto"""
+    return "GetAllCryptos"
+
+
 # -------------------------------------------- Admin -------------------------------------------- #
