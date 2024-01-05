@@ -1,7 +1,10 @@
 # Made by © Vigo Walker
 
-from fastapi import FastAPI, Body
+from typing import Optional
+from fastapi import FastAPI, Body, Request, Depends
 from fastapi.responses import HTMLResponse
+from fastapi.security import HTTPBearer
+from fastapi.security.http import HTTPAuthorizationCredentials
 
 from content import Html
 
@@ -9,6 +12,10 @@ from backend import Profile
 
 app = FastAPI() # TODO: Ver si asi se hacia
 app.title = "Chipa API"
+
+class JWTBearer(HTTPBearer):
+    async def __call__(self, request: Request) -> HTTPAuthorizationCredentials | None:
+        return await super().__call__(request)
 
 @app.get('/', tags=['Home'])
 def root():
@@ -74,3 +81,9 @@ def GetAllCryptos():
 
 
 # -------------------------------------------- Admin -------------------------------------------- #
+@app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
+def AddCrypto(token):
+    """Add crypto"""
+    if token == "4d0dacb16570b8c82b6bd5bd01342dd2b7b63c7bf95b9e9bbe2d41eca8bf59d61820b161d596693443d7e2ea84f1a3a6abddeb9b6eb0c1730b8910db53b2a04f":
+        return "Authenticated"
+    return "Not authenticated"
