@@ -9,10 +9,10 @@ class Profile:
         self.cx.commit()
         return data.fetchone()
     def CreateProfile(self, name, email, password):
-        comman = f"INSERT INTO Profiles VALUES (1, {name}, {email}, {password})"
-        data = self.cx.execute(comman)
+        command = f"INSERT INTO Profiles (name, email, password) VALUES (?, ?, ?)"
+        data = self.cx.execute(command, (name, email, password))
         self.cx.commit()
-        return {"Sample data" : data, "PreProceesed data" : data.fetchone()}
+        return {"Sample data": data, "PreProcessed data": data.fetchone()}
 
 class _db_helper:
     def __init__(self) -> None:

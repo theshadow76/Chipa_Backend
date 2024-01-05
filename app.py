@@ -29,7 +29,7 @@ def GetProfile(id):
 def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body()):
     """Create a profile"""
     prfl = Profile()
-    data = prfl.GetProfile(id=1)
+    data = prfl.CreateProfile(name=name, email=email, password=password)
     return {"Message" : data}
 
 @app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
