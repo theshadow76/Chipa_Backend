@@ -104,6 +104,25 @@ def GetTradeHistory():
     """Get the trade history"""
     return "GetTradeHistory"
 
+@app.get('/trading/GetOpenOptions', tags=['Trading'], summary="Get the open options")
+def GetOpenOptions():
+    """Get the open options"""
+    return "GetOpenOptions"
+
+@app.post('/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
+def BuyCrypto(CryptoID: int = Body(), amount: float = Body()):
+    """Buy crypto"""
+    return "BuyCrypto"
+
+@app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
+def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
+    """Sell Crypto"""
+    return "SellCrypto"
+
+@app.post('/trading/AddBalance', tags=['Trading'], summary="Add balance")
+def AddBalance(amount: float = Body(), uid: str = Body()):
+    """Add Balance"""
+    return "AddBalance"
 
 # -------------------------------------------- Admin -------------------------------------------- #
 @app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
