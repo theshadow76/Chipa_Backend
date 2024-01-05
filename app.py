@@ -41,3 +41,25 @@ def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), passw
 def DeleteProfile(id):
     """Delete Profile"""
     return "Profile Deleted"
+
+# -------------------------------------------- Trading -------------------------------------------- #
+# TODO:
+#   GetCryptoByID --> GET - NotDone
+#   GetAllCryptosIDs --> GET - NotDone
+#   GetAllCryptos --> GET - NotDone
+#   GetBalance --> GET - NotDone
+#   GetCryptoPrice --> GET - NotDone
+#   GetProfitByID --> GET - NotDone
+#   GetAllProfit --> GET - NotDone
+#   GetTradeHistory --> GET - NotDone
+#   GetOpenOptions --> GET - NotDone
+#   BuyCrypto --> POST - NotDone
+#   SellCrypto --> POST - NotDone
+#   AddBalance --> POST - NotDone
+
+@app.get('/trading/GetCryptoByID/{id}', tags=['Trading'], summary="Get the crypto by it's ID")
+def GetCryptoByID(id):
+    """Get Crypto By it's ID"""
+    return "GetCryptoByID"
+
+# -------------------------------------------- Admin -------------------------------------------- #
