@@ -2,9 +2,10 @@
 
 from typing import Optional
 from fastapi import FastAPI, Body, Request, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBearer
 from fastapi.security.http import HTTPAuthorizationCredentials
+import requests
 
 from content import Html
 
@@ -72,7 +73,15 @@ def GetCryptoByID(id):
 @app.get('/trading/GetAllCryptosIDs', tags=['Trading'], summary="Get all the cryptos id's")
 def GetAllCryptosIDs():
     """Get all the cryptos id's"""
-    return "GetAllCryptosIDs"
+    response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+    data = response.json()
+    ALLDATA = []
+    if response.status_code == 200:
+        for i in data:
+            ALLDATA.append({"id" : i['id'], "name" : i['name']})
+        return JSONResponse(content=ALLDATA, status_code=response.status_code)
+    else:
+        return JSONResponse(content={"error" : "A error ocured"}, status_code=response.status_code)
 
 @app.get('/trading/GetAllCryptos', tags=['Trading'], summary="Get all the crypto")
 def GetAllCryptos():
