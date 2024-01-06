@@ -1,6 +1,7 @@
 import sqlite3
 import uuid
 from cryptography.fernet import Fernet
+import requests
 
 class Profile:
     def __init__(self) -> None:
@@ -18,6 +19,14 @@ class Profile:
             return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
         except Exception as e:
             return {"Error" : f"{e}"}
+
+class Trading:
+    def __init__(self) -> None:
+        self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+    def GetCoins(self):
+        response = requests.get(self.url)
+        data = response.json()
+        return data
 
 class _db_helper:
     def __init__(self) -> None:
