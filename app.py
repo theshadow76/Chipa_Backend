@@ -11,7 +11,7 @@ from content import Html
 
 from backend import Profile
 
-app = FastAPI() # TODO: Ver si asi se hacia
+app = FastAPI()
 app.title = "Chipa API"
 
 class JWTBearer(HTTPBearer):
