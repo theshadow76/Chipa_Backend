@@ -68,7 +68,17 @@ def DeleteProfile(id):
 @app.get('/trading/GetCryptoByID/{id}', tags=['Trading'], summary="Get the crypto by it's ID")
 def GetCryptoByID(id):
     """Get Crypto By it's ID"""
-    return "GetCryptoByID"
+    try:
+        response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+        data = response.json()
+        if response.status_code == 200:
+            for i in data:
+                if i['id'] == id:
+                    return JSONResponse(content=i, status_code=200)
+            return JSONResponse(content=f"No crypto found for id: {id}", status_code=404)
+        return JSONResponse(content="Something when wrong", status_code=response.status_code)
+    except Exception as e:
+        return JSONResponse(content=f"A error ocured: {e}", status_code=400)
 
 @app.get('/trading/GetAllCryptosIDs', tags=['Trading'], summary="Get all the cryptos id's")
 def GetAllCryptosIDs():
