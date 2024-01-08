@@ -111,7 +111,16 @@ def GetBalance(uid):
 @app.get('/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
 def GetCryptoPrice(id):
     """Get the crypto price"""
-    return "GetCryptoPrice"
+    response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+    data = response.json()
+    try:
+        if response.status_code == 200:
+            for i in data:
+                if i['id'] == id:
+                    return JSONResponse(content=i['current_price'], status_code=200)
+            return JSONResponse(content='Crypto with that ID was not found', status_code=404)
+    except Exception as e:
+        return JSONResponse(content=f"A error ocured: {e}", status_code=response.status_code)
 
 @app.get('/trading/GetProfitByID', tags=['Trading'], summary="Get the profit of a specific trade")
 def GetProfitByID(id):
