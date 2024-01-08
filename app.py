@@ -96,7 +96,12 @@ def GetAllCryptosIDs():
 @app.get('/trading/GetAllCryptos', tags=['Trading'], summary="Get all the crypto")
 def GetAllCryptos():
     """Get all the crypto"""
-    return "GetAllCryptos"
+    try:
+        response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+        data = response.json()
+        return JSONResponse(content=data, status_code=response.status_code)
+    except Exception as e:
+        return JSONResponse(content=f"A error ocured: {e}", status_code=400)
 
 @app.get('/trading/GetBalance', tags=['Trading'], summary="Get the balance")
 def GetBalance(uid):
