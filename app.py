@@ -117,7 +117,7 @@ def GetCryptoPrice(id):
         if response.status_code == 200:
             for i in data:
                 if i['id'] == id:
-                    return JSONResponse(content=i['current_price'], status_code=200)
+                    return JSONResponse(content={"Price" : i['current_price']}, status_code=200)
             return JSONResponse(content='Crypto with that ID was not found', status_code=404)
     except Exception as e:
         return JSONResponse(content=f"A error ocured: {e}", status_code=response.status_code)
