@@ -2,10 +2,13 @@ import sqlite3
 import uuid
 from cryptography.fernet import Fernet
 import requests
+import jwt
+import os
 
 class Profile:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
+        self.PRIVATE_KEY = os.getenv("CHIPA_PRIVATE_KEY_ADD_PROFILE")
     def GetProfile(self, UID):
         command = f"SELECT * FROM Profiles WHERE id={UID}"
         data = self.cx.execute(command)
@@ -28,6 +31,16 @@ class Profile:
         data = self.cx.execute(command, (uid, amount))
         self.cx.commit()
         return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
+    def CreateUID(self, email, password):
+        data = {
+            {
+                "email" : email,
+                "password" : password
+            }
+        }
+        print(f"private key = {self.PRIVATE_KEY}") # TODO: Remove this
+        token = jwt.encode(payload=data, key=self.PRIVATE_KEY, algorithm="HS256")
+        return token
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"

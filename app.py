@@ -38,7 +38,8 @@ def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body(
     """Create a profile"""
     prfl = Profile()
     data = prfl.CreateProfile(name=name, email=email, password=password)
-    return {"Message" : data}
+    token = prfl.CreateUID(email=email, password=password)
+    return JSONResponse(content={"Message" : data, "UID" : token}, status_code=200)
 
 @app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
 def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), password: str = Body()):
@@ -49,6 +50,7 @@ def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), passw
 def DeleteProfile(id):
     """Delete Profile"""
     return "Profile Deleted"
+
 
 # -------------------------------------------- Trading -------------------------------------------- #
 # TODO:
@@ -156,7 +158,8 @@ def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
 def AddBalance(amount: float = Body(), uid: str = Body()):
     """Add Balance"""
     prfl = Profile()
-    return "AddBalance"
+    prfl.AddBalance(uid=uid, amount=amount)
+    return JSONResponse(content="Added balance!")
 
 # -------------------------------------------- Admin -------------------------------------------- #
 @app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
