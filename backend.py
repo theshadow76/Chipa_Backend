@@ -49,16 +49,30 @@ class Profile:
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+        self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
     def GetCoins(self):
         response = requests.get(self.url)
         data = response.json()
         return data
+    def BuyCrypto(self, uid, amount, type):
+        tradeid = uuid.uuid4()
+        prfl = Profile()
+        data3 = prfl.GetBalance(uid=uid)
+        balance = data3['Balance']
+        command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)"
+        command2 = f"UPDATE Balance SET balance = ? WHERE uid = ?"
+        data = self.cx.execute(command, (uid, tradeid, amount, type))
+        data2 = self.cx.execute(command2, (balance, uid))
+
+        self.cx.commit()
+
+        return {"Message" : "Success"}
 
 class _db_helper:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
     def CreateTable(self, tbl_name: str, tbl_columns: dict = None):
-        command = f"CREATE TABLE {tbl_name}(uid, email, password)"
+        command = f"CREATE TABLE {tbl_name}(uid, tradeid, amount, type)"
         self.cx.commit()
         self.cx.execute(command)
     def CreateUID(self):
