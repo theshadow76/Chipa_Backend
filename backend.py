@@ -19,7 +19,10 @@ class Profile:
             return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
         except Exception as e:
             return {"Error" : f"{e}"}
-
+    def SQLExecuter(self, command):
+        data = self.cx.execute(command)
+        self.cx.commit()
+        return {"Message" : data.fetchone()}
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
