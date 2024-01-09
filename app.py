@@ -155,6 +155,7 @@ def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
 @app.post('/trading/AddBalance', tags=['Trading'], summary="Add balance")
 def AddBalance(amount: float = Body(), uid: str = Body()):
     """Add Balance"""
+    prfl = Profile()
     return "AddBalance"
 
 # -------------------------------------------- Admin -------------------------------------------- #
