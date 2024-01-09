@@ -16,8 +16,9 @@ class Profile:
         return data.fetchone()
     def CreateProfile(self, name, email, password):
         try:
-            command = f"INSERT INTO Profiles (name, email, password, uid) VALUES (?, ?, ?, ?)"
-            data = self.cx.execute(command, (name, email, password))
+            uid = self.CreateUID(email=email, password=password)
+            command = f"INSERT INTO ProfilesV2 (uid, email, password) VALUES (?, ?, ?)"
+            data = self.cx.execute(command, (uid, email, password))
             self.cx.commit()
             return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
         except Exception as e:
@@ -33,14 +34,14 @@ class Profile:
         return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
     def CreateUID(self, email, password):
         data = {
-            {
-                "email" : email,
-                "password" : password
-            }
+            "email": email,
+            "password": password
         }
         print(f"private key = {self.PRIVATE_KEY}") # TODO: Remove this
-        token = jwt.encode(payload=data, key=self.PRIVATE_KEY, algorithm="HS256")
+        token = jwt.encode(payload=data, key=str(self.PRIVATE_KEY), algorithm="HS256")
         return token
+    def SaveUID(self, uid):
+        command = f""
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
@@ -53,7 +54,7 @@ class _db_helper:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
     def CreateTable(self, tbl_name: str, tbl_columns: dict = None):
-        command = f"CREATE TABLE {tbl_name}(id, uid, balance)"
+        command = f"CREATE TABLE {tbl_name}(uid, email, password)"
         self.cx.commit()
         self.cx.execute(command)
     def CreateUID(self):

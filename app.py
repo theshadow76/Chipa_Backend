@@ -39,7 +39,7 @@ def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body(
     prfl = Profile()
     data = prfl.CreateProfile(name=name, email=email, password=password)
     token = prfl.CreateUID(email=email, password=password)
-    return JSONResponse(content={"Message" : data, "UID" : token}, status_code=200)
+    return JSONResponse(content={"Message" : "Done"}, status_code=200)
 
 @app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
 def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), password: str = Body()):
