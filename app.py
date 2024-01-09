@@ -158,7 +158,7 @@ def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
 def AddBalance(amount: float = Body(), uid: str = Body()):
     """Add Balance"""
     prfl = Profile()
-    prfl.AddBalance(uid=uid, amount=amount)
+    prfl.AddBalance(uid=uid, balance=amount)
     return JSONResponse(content="Added balance!")
 
 # -------------------------------------------- Admin -------------------------------------------- #
