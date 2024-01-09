@@ -40,6 +40,12 @@ class Profile:
         print(f"private key = {self.PRIVATE_KEY}") # TODO: Remove this
         token = jwt.encode(payload=data, key=str(self.PRIVATE_KEY), algorithm="HS256")
         return token
+    def GetBalance(self, uid):
+        command = "SELECT * FROM Balance WHERE uid=?"
+        data = self.cx.execute(command, (uid,))
+        self.cx.commit()
+        dt = data.fetchone()
+        return {"ID" : dt[0], "UID" : dt[1], "Balance" : dt[2]}
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"

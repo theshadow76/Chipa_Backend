@@ -108,7 +108,9 @@ def GetAllCryptos():
 @app.get('/trading/GetBalance', tags=['Trading'], summary="Get the balance")
 def GetBalance(uid):
     """Get the balance"""
-    return "GetBalance"
+    prfl = Profile()
+    data = prfl.GetBalance(uid=uid)
+    return JSONResponse(content=data)
 
 @app.get('/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
 def GetCryptoPrice(id):
