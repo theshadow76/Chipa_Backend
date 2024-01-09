@@ -9,7 +9,7 @@ import requests
 
 from content import Html
 
-from backend import Profile
+from backend import Profile, Trading
 
 app = FastAPI()
 app.title = "Chipa API"
@@ -147,9 +147,11 @@ def GetOpenOptions():
     return "GetOpenOptions"
 
 @app.post('/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
-def BuyCrypto(CryptoID: int = Body(), amount: float = Body(), uid: str = Body()):
+def BuyCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body()):
     """Buy crypto"""
-    return "BuyCrypto"
+    trading = Trading()
+    data = trading.BuyCrypto(uid=uid, amount_crypto=1, amount_usd=amount, type="buy", CryptoID=CryptoID)
+    return data
 
 @app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
 def SellCrypto(CryptoID: int = Body(), amount: float = Body()):

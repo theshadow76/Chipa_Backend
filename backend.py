@@ -55,10 +55,11 @@ class Trading:
         data = response.json()
         return data
     def BuyCrypto(self, uid, amount_crypto, amount_usd, type, CryptoID):
-        tradeid = uuid.uuid4()
+        tradeid = str(uuid.uuid4())
         prfl = Profile()
         data3 = prfl.GetBalance(uid=uid)
-        balance = data3['Balance']
+        balance2 = data3['Balance']
+        balance = balance2 - amount_usd
 
 
         # NOTE: Esto lo tengo por ahora asi, sera mas usado en el futuro
