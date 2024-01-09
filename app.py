@@ -147,7 +147,7 @@ def GetOpenOptions():
     return "GetOpenOptions"
 
 @app.post('/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
-def BuyCrypto(CryptoID: int = Body(), amount: float = Body()):
+def BuyCrypto(CryptoID: int = Body(), amount: float = Body(), uid: str = Body()):
     """Buy crypto"""
     return "BuyCrypto"
 

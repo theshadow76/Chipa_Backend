@@ -54,11 +54,28 @@ class Trading:
         response = requests.get(self.url)
         data = response.json()
         return data
-    def BuyCrypto(self, uid, amount, type):
+    def BuyCrypto(self, uid, amount_crypto, amount_usd, type, CryptoID):
         tradeid = uuid.uuid4()
         prfl = Profile()
         data3 = prfl.GetBalance(uid=uid)
         balance = data3['Balance']
+
+
+        # NOTE: Esto lo tengo por ahora asi, sera mas usado en el futuro
+        response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+        crypto_price = response.json()
+        crypto_price_real = None
+        if response.status_code == 200:
+            for i in crypto_price:
+                if i['id'] == id:
+                    crypto_price_real = i['current_price']
+        
+        # TODO: Hacer el algoritmo para conseguir cuanto el usuario esta gastando:
+        #       - primero el usuario va decir cuanto esta invirtienda en esa crypto, es decir, si por ejemplo invierto en BTC y BTC esta a 48k USD, digo que quiero comprar 1000 USD worth del BTC
+        #         Eso significaria que compro 0.000022BTC, pero el tema es conseguir ese numero
+        
+        amount = amount_usd
+
         command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)"
         command2 = f"UPDATE Balance SET balance = ? WHERE uid = ?"
         data = self.cx.execute(command, (uid, tradeid, amount, type))
