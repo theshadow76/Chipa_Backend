@@ -2,10 +2,13 @@ import sqlite3
 import uuid
 from cryptography.fernet import Fernet
 import requests
+import jwt
+import os
 
 class Profile:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
+        self.PRIVATE_KEY = os.getenv("CHIPA_PRIVATE_KEY_ADD_PROFILE")
     def GetProfile(self, UID):
         command = f"SELECT * FROM Profiles WHERE id={UID}"
         data = self.cx.execute(command)
@@ -13,8 +16,9 @@ class Profile:
         return data.fetchone()
     def CreateProfile(self, name, email, password):
         try:
-            command = f"INSERT INTO Profiles (name, email, password, uid) VALUES (?, ?, ?, ?)"
-            data = self.cx.execute(command, (name, email, password))
+            uid = self.CreateUID(email=email, password=password)
+            command = f"INSERT INTO ProfilesV2 (uid, email, password) VALUES (?, ?, ?)"
+            data = self.cx.execute(command, (uid, email, password))
             self.cx.commit()
             return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
         except Exception as e:
@@ -23,24 +27,70 @@ class Profile:
         data = self.cx.execute(command)
         self.cx.commit()
         return {"Message" : data.fetchone()}
-    def AddBalance(self, uid: str, amount: float):
-        command = f"INSERT INTO Profiles (uid, amount) VALUES (?, ?)"
-        data = self.cx.execute(command, (uid, amount))
+    def AddBalance(self, uid: str, balance: float):
+        command = f"INSERT INTO Balance (uid, balance) VALUES (?, ?)"
+        data = self.cx.execute(command, (uid, balance))
         self.cx.commit()
         return {"Sample data": data, "PreProcessed data": data.fetchone(), "Message" : "Success"}
+    def CreateUID(self, email, password):
+        data = {
+            "email": email,
+            "password": password
+        }
+        print(f"private key = {self.PRIVATE_KEY}") # TODO: Remove this
+        token = jwt.encode(payload=data, key=str(self.PRIVATE_KEY), algorithm="HS256")
+        return token
+    def GetBalance(self, uid):
+        command = "SELECT * FROM Balance WHERE uid=?"
+        data = self.cx.execute(command, (uid,))
+        self.cx.commit()
+        dt = data.fetchone()
+        return {"ID" : dt[0], "UID" : dt[1], "Balance" : dt[2]}
 class Trading:
     def __init__(self) -> None:
         self.url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en"
+        self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
     def GetCoins(self):
         response = requests.get(self.url)
         data = response.json()
         return data
+    def BuyCrypto(self, uid, amount_crypto, amount_usd, type, CryptoID):
+        tradeid = str(uuid.uuid4())
+        prfl = Profile()
+        data3 = prfl.GetBalance(uid=uid)
+        balance2 = data3['Balance']
+        balance = balance2 - amount_usd
+
+
+        # NOTE: Esto lo tengo por ahora asi, sera mas usado en el futuro
+        response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
+        crypto_price = response.json()
+        crypto_price_real = None
+        if response.status_code == 200:
+            for i in crypto_price:
+                if i['id'] == id:
+                    crypto_price_real = i['current_price']
+        
+        # TODO: Hacer el algoritmo para conseguir cuanto el usuario esta gastando:
+        #       - primero el usuario va decir cuanto esta invirtienda en esa crypto, es decir, si por ejemplo invierto en BTC y BTC esta a 48k USD, digo que quiero comprar 1000 USD worth del BTC
+        #         Eso significaria que compro 0.000022BTC, pero el tema es conseguir ese numero
+        
+        amount = amount_usd
+
+        command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)"
+        command2 = f"UPDATE Balance SET balance = ? WHERE uid = ?"
+        data = self.cx.execute(command, (uid, tradeid, amount, type))
+        data2 = self.cx.execute(command2, (balance, uid))
+
+        self.cx.commit()
+
+        return {"Message" : "Success"}
 
 class _db_helper:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
     def CreateTable(self, tbl_name: str, tbl_columns: dict = None):
-        command = f"CREATE TABLE {tbl_name}(id, uid, balance)"
+        command = f"CREATE TABLE {tbl_name}(uid, tradeid, amount, type)"
         self.cx.commit()
         self.cx.execute(command)
     def CreateUID(self):

@@ -9,7 +9,7 @@ import requests
 
 from content import Html
 
-from backend import Profile
+from backend import Profile, Trading
 
 app = FastAPI()
 app.title = "Chipa API"
@@ -38,7 +38,8 @@ def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body(
     """Create a profile"""
     prfl = Profile()
     data = prfl.CreateProfile(name=name, email=email, password=password)
-    return {"Message" : data}
+    token = prfl.CreateUID(email=email, password=password)
+    return JSONResponse(content={"Message" : "Done"}, status_code=200)
 
 @app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
 def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), password: str = Body()):
@@ -49,6 +50,7 @@ def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), passw
 def DeleteProfile(id):
     """Delete Profile"""
     return "Profile Deleted"
+
 
 # -------------------------------------------- Trading -------------------------------------------- #
 # TODO:
@@ -106,7 +108,9 @@ def GetAllCryptos():
 @app.get('/trading/GetBalance', tags=['Trading'], summary="Get the balance")
 def GetBalance(uid):
     """Get the balance"""
-    return "GetBalance"
+    prfl = Profile()
+    data = prfl.GetBalance(uid=uid)
+    return JSONResponse(content=data)
 
 @app.get('/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
 def GetCryptoPrice(id):
@@ -143,9 +147,11 @@ def GetOpenOptions():
     return "GetOpenOptions"
 
 @app.post('/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
-def BuyCrypto(CryptoID: int = Body(), amount: float = Body()):
+def BuyCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body()):
     """Buy crypto"""
-    return "BuyCrypto"
+    trading = Trading()
+    data = trading.BuyCrypto(uid=uid, amount_crypto=1, amount_usd=amount, type="buy", CryptoID=CryptoID)
+    return data
 
 @app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
 def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
@@ -156,7 +162,8 @@ def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
 def AddBalance(amount: float = Body(), uid: str = Body()):
     """Add Balance"""
     prfl = Profile()
-    return "AddBalance"
+    prfl.AddBalance(uid=uid, balance=amount)
+    return JSONResponse(content="Added balance!")
 
 # -------------------------------------------- Admin -------------------------------------------- #
 @app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
