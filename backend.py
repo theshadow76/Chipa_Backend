@@ -77,7 +77,7 @@ class Trading:
         
         amount = amount_usd
 
-        command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)"
+        command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)" # TODO: Añadir el crypto_name aqui
         command2 = f"UPDATE Balance SET balance = ? WHERE uid = ?"
         data = self.cx.execute(command, (uid, tradeid, amount, type))
         data2 = self.cx.execute(command2, (balance, uid))

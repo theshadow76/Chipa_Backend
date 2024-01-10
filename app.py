@@ -154,7 +154,7 @@ def BuyCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body())
     return data
 
 @app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
-def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
+def SellCrypto(CryptoID: int = Body(), amount: float = Body(), uid: str = Body()):
     """Sell Crypto"""
     return "SellCrypto"
 
