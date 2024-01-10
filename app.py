@@ -154,9 +154,11 @@ def BuyCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body())
     return data
 
 @app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
-def SellCrypto(CryptoID: int = Body(), amount: float = Body()):
+def SellCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body()):
     """Sell Crypto"""
-    return "SellCrypto"
+    trading = Trading()
+    data = trading.SellCrypto(uid=uid, amount_crypto=1, amount_usd=amount, type="sell", CryptoID=CryptoID)
+    return data
 
 @app.post('/trading/AddBalance', tags=['Trading'], summary="Add balance")
 def AddBalance(amount: float = Body(), uid: str = Body()):
