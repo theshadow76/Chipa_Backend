@@ -86,6 +86,24 @@ class Trading:
 
         return {"Message" : "Success"}
 
+    def SellCrypto(self, uid, amount_crypto, amount_usd, type, CryptoID):
+        tradeid = str(uuid.uuid4())
+        prfl = Profile()
+        data3 = prfl.GetBalance(uid=uid)
+        balance2 = data3['Balance']
+        balance = balance2 + amount_usd
+
+        amount = amount_usd
+
+        command = f"INSERT INTO CryptoTrading (uid, tradeid, amount, type) VALUES (?, ?, ?, ?)" # TODO: Añadir el crypto_name aqui
+        command2 = f"UPDATE Balance SET balance = ? WHERE uid = ?"
+        data = self.cx.execute(command, (uid, tradeid, amount, type))
+        data2 = self.cx.execute(command2, (balance, uid))
+
+        self.cx.commit()
+
+        return {"Message" : "Success"}
+
 class _db_helper:
     def __init__(self) -> None:
         self.cx = sqlite3.connect("chipa.db", check_same_thread=False)
