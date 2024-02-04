@@ -1,3 +1,5 @@
+# Made by © Vigo Walker
+
 import sqlite3
 import uuid
 from cryptography.fernet import Fernet

@@ -1,4 +1,7 @@
 # Made by © Vigo Walker
+# This is a personal project that is not aimed to be used in the real life, as all of this is complety fake, all though it does uses third party API's,
+# That doesn't mean that this API can be used in a real world example,
+# if you have any questions or need support, please reach me at vigopaul05@gmail.com or on my instagram @vigo_walker
 
 from typing import Optional
 from fastapi import FastAPI, Body, Request, Depends
