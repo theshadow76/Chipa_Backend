@@ -29,14 +29,14 @@ def root():
 
 # -------------------------------------------- profile -------------------------------------------- #
 
-@app.get('/porfile', tags=['Profile'], summary="Get the profile of the user")
+@app.get('/demo/porfile', tags=['Profile'], summary="Get the profile of the user")
 def GetProfile(uid):
     """GET profile data, Example usage: https://chipa.api.vigodev.net/profile?id={UID}"""
     prfl = Profile()
     data = prfl.GetProfile(id=uid)
     return {"Message" : data}
 
-@app.post('/profile/add', tags=['Profile'], summary="Create profile")
+@app.post('/demo/profile/add', tags=['Profile'], summary="Create profile")
 def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body()):
     """Create a profile"""
     prfl = Profile()
@@ -44,12 +44,12 @@ def CreateProfile(name: str = Body(), email: str = Body(), password: str = Body(
     token = prfl.CreateUID(email=email, password=password)
     return JSONResponse(content={"Message" : "Done"}, status_code=200)
 
-@app.put('/porfile/edit', tags=['Profile'], summary="Edit profile")
+@app.put('/demo/porfile/edit', tags=['Profile'], summary="Edit profile")
 def EditProfile(id: str = Body(), name: str = Body(), email: str = Body(), password: str = Body()):
     """Edit profile"""
     return "Profile Edited"
 
-@app.delete('/profile/delete', tags=['Profile'], summary="Delete profile")
+@app.delete('/demo/profile/delete', tags=['Profile'], summary="Delete profile")
 def DeleteProfile(id):
     """Delete Profile"""
     return "Profile Deleted"
@@ -70,7 +70,7 @@ def DeleteProfile(id):
 #   SellCrypto --> POST - NotDone
 #   AddBalance --> POST - NotDone
 
-@app.get('/trading/GetCryptoByID/{id}', tags=['Trading'], summary="Get the crypto by it's ID")
+@app.get('/demo/trading/GetCryptoByID/{id}', tags=['Trading'], summary="Get the crypto by it's ID")
 def GetCryptoByID(id):
     """Get Crypto By it's ID"""
     try:
@@ -85,7 +85,7 @@ def GetCryptoByID(id):
     except Exception as e:
         return JSONResponse(content=f"A error ocured: {e}", status_code=400)
 
-@app.get('/trading/GetAllCryptosIDs', tags=['Trading'], summary="Get all the cryptos id's")
+@app.get('/demo/trading/GetAllCryptosIDs', tags=['Trading'], summary="Get all the cryptos id's")
 def GetAllCryptosIDs():
     """Get all the cryptos id's"""
     response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
@@ -98,7 +98,7 @@ def GetAllCryptosIDs():
     else:
         return JSONResponse(content={"error" : "A error ocured"}, status_code=response.status_code)
 
-@app.get('/trading/GetAllCryptos', tags=['Trading'], summary="Get all the crypto")
+@app.get('/demo/trading/GetAllCryptos', tags=['Trading'], summary="Get all the crypto")
 def GetAllCryptos():
     """Get all the crypto"""
     try:
@@ -108,14 +108,14 @@ def GetAllCryptos():
     except Exception as e:
         return JSONResponse(content=f"A error ocured: {e}", status_code=400)
 
-@app.get('/trading/GetBalance', tags=['Trading'], summary="Get the balance")
+@app.get('/demo/trading/GetBalance', tags=['Trading'], summary="Get the balance")
 def GetBalance(uid):
     """Get the balance"""
     prfl = Profile()
     data = prfl.GetBalance(uid=uid)
     return JSONResponse(content=data)
 
-@app.get('/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
+@app.get('/demo/trading/GetCryptoPrice', tags=['Trading'], summary="Get the crypto price")
 def GetCryptoPrice(id):
     """Get the crypto price"""
     response = requests.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&locale=en")
@@ -129,41 +129,41 @@ def GetCryptoPrice(id):
     except Exception as e:
         return JSONResponse(content=f"A error ocured: {e}", status_code=response.status_code)
 
-@app.get('/trading/GetProfitByID', tags=['Trading'], summary="Get the profit of a specific trade")
+@app.get('/demo/trading/GetProfitByID', tags=['Trading'], summary="Get the profit of a specific trade")
 def GetProfitByID(id):
     """Get the proift of a specific trade"""
     return "GetProfitByID"
 
-@app.get('/trading/GetAllProfit', tags=['Trading'], summary="Get all the profit")
+@app.get('/demo/trading/GetAllProfit', tags=['Trading'], summary="Get all the profit")
 def GetAllProfit():
     """Get all the profit"""
     return "GetAllProfit"
 
-@app.get('/trading/GetTradeHistory', tags=['Trading'], summary="Get the trade history")
+@app.get('/demo/trading/GetTradeHistory', tags=['Trading'], summary="Get the trade history")
 def GetTradeHistory():
     """Get the trade history"""
     return "GetTradeHistory"
 
-@app.get('/trading/GetOpenOptions', tags=['Trading'], summary="Get the open options")
+@app.get('/demo/trading/GetOpenOptions', tags=['Trading'], summary="Get the open options")
 def GetOpenOptions():
     """Get the open options"""
     return "GetOpenOptions"
 
-@app.post('/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
+@app.post('/demo/trading/BuyCrypto', tags=['Trading'], summary="Buy crypto")
 def BuyCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body()):
     """Buy crypto"""
     trading = Trading()
     data = trading.BuyCrypto(uid=uid, amount_crypto=1, amount_usd=amount, type="buy", CryptoID=CryptoID)
     return data
 
-@app.post('/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
+@app.post('/demo/trading/SellCrypto', tags=['Trading'], summary="Sell crypto")
 def SellCrypto(CryptoID: str = Body(), amount: float = Body(), uid: str = Body()):
     """Sell Crypto"""
     trading = Trading()
     data = trading.SellCrypto(uid=uid, amount_crypto=1, amount_usd=amount, type="sell", CryptoID=CryptoID)
     return data
 
-@app.post('/trading/AddBalance', tags=['Trading'], summary="Add balance")
+@app.post('/demo/trading/AddBalance', tags=['Trading'], summary="Add balance")
 def AddBalance(amount: float = Body(), uid: str = Body()):
     """Add Balance"""
     prfl = Profile()
@@ -171,7 +171,7 @@ def AddBalance(amount: float = Body(), uid: str = Body()):
     return JSONResponse(content="Added balance!")
 
 # -------------------------------------------- Admin -------------------------------------------- #
-@app.post('/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
+@app.post('/demo/admin/trading/crypto/add', tags=['Admin'], dependencies=[Depends(JWTBearer())])
 def AddCrypto(token):
     """Add crypto"""
     if token == "4d0dacb16570b8c82b6bd5bd01342dd2b7b63c7bf95b9e9bbe2d41eca8bf59d61820b161d596693443d7e2ea84f1a3a6abddeb9b6eb0c1730b8910db53b2a04f":
